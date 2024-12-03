@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Scanner</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+    
+        video {
+            width: 80%;
+            height: auto;
+            margin: 10px auto;
+            border: 1px solid #ccc;
+        }
+    
+        p {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Barcode Scanner</h1>
+    <video id="camera-feed" autoplay></video>
+    <p>Scanned Barcode: <span id="barcode-result">None</span></p>
+
+    <script src="https://cdn.jsdelivr.net/npm/@zxing/library@latest"></script>
+    <script>
+        const codeReader = new ZXing.BrowserMultiFormatReader();
+        const videoElement = document.getElementById('camera-feed');
+        const resultElement = document.getElementById('barcode-result');
+
+        // Access the user's camera
+        navigator.mediaDevices
+            .getUserMedia({ video: { facingMode: 'environment' } })
+            .then((stream) => {
+                videoElement.srcObject = stream;
+                videoElement.play();
+
+                // Decode barcodes from the camera feed
+                codeReader.decodeFromVideoDevice(
+                    null,
+                    'camera-feed',
+                    (result, error) => {
+                        if (result) {
+                            resultElement.textContent = result.text;
+                        }
+                        if (error) {
+                            console.error(error);
+                        }
+                    }
+                );
+            })
+            .catch((err) => {
+                console.error('Error accessing camera:', err);
+            });
+
+    </script>
+</body>
+
+</html>
