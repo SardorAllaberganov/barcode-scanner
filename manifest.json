@@ -2,7 +2,7 @@
     "name": "Barcode Scanner",
     "short_name": "Scanner",
     "description": "A barcode scanning app built with PWA",
-    "start_url": "/index.html",
+    "start_url": "/barcode-scanner/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#000000",
