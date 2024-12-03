@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barcode Scanner</title>
-
+    <link rel="manifest" href="manifest.json">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,8 +14,8 @@
         }
 
         video {
-            width: 80%;
-            height: auto;
+            width: 90%;
+            height: 40vh;
             margin: 10px auto;
             border: 1px solid #ccc;
         }
@@ -64,6 +64,14 @@
                 console.error('Error accessing camera:', err);
             });
 
+    </script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js').then(() => {
+                console.log('Service Worker Registered');
+            });
+        }
     </script>
 </body>
 
