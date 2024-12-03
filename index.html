@@ -12,14 +12,14 @@
             text-align: center;
             margin: 20px;
         }
-    
+
         video {
             width: 80%;
             height: auto;
             margin: 10px auto;
             border: 1px solid #ccc;
         }
-    
+
         p {
             font-size: 1.2em;
         }
@@ -31,7 +31,9 @@
     <video id="camera-feed" autoplay></video>
     <p>Scanned Barcode: <span id="barcode-result">None</span></p>
 
-    <script src="https://cdn.jsdelivr.net/npm/@zxing/library@latest"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@zxing/library@latest"></script> -->
+    <script src="https://unpkg.com/@zxing/library@latest"></script>
+
     <script>
         const codeReader = new ZXing.BrowserMultiFormatReader();
         const videoElement = document.getElementById('camera-feed');
@@ -39,7 +41,7 @@
 
         // Access the user's camera
         navigator.mediaDevices
-            .getUserMedia({ video: { facingMode: 'environment' } })
+            .getUserMedia({ video: true })
             .then((stream) => {
                 videoElement.srcObject = stream;
                 videoElement.play();
