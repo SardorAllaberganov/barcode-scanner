@@ -1,70 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barcode Scanner</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-        }
-
-        video {
-            width: 80%;
-            height: auto;
-            margin: 10px auto;
-            border: 1px solid #ccc;
-        }
-
-        p {
-            font-size: 1.2em;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barcode Reader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+    video {
+      border: 2px solid #333;
+      width: 80%;
+      max-width: 600px;
+      margin-bottom: 20px;
+    }
+    #output {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
 </head>
-
 <body>
-    <h1>Barcode Scanner</h1>
-    <video id="camera-feed" autoplay></video>
-    <p>Scanned Barcode: <span id="barcode-result">None</span></p>
+  <h1>Barcode Reader</h1>
+  <video id="video" autoplay></video>
+  <div id="output">Scanning...</div>
 
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@zxing/library@latest"></script> -->
-    <script src="https://unpkg.com/@zxing/library@latest"></script>
+  <script>
+    const video = document.getElementById('video');
+    const output = document.getElementById('output');
 
-    <script>
-        const codeReader = new ZXing.BrowserMultiFormatReader();
-        const videoElement = document.getElementById('camera-feed');
-        const resultElement = document.getElementById('barcode-result');
+    async function startBarcodeScanner() {
+      if ('BarcodeDetector' in window) {
+        const barcodeDetector = new BarcodeDetector({ formats: ['qr_code', 'code_128', 'ean_13'] });
 
-        // Access the user's camera
-        navigator.mediaDevices
-            .getUserMedia({ video: true })
-            .then((stream) => {
-                videoElement.srcObject = stream;
-                videoElement.play();
+        try {
+          // Access the device camera
+          const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+          video.srcObject = stream;
 
-                // Decode barcodes from the camera feed
-                codeReader.decodeFromVideoDevice(
-                    null,
-                    'camera-feed',
-                    (result, error) => {
-                        if (result) {
-                            resultElement.textContent = result.text;
-                        }
-                        if (error) {
-                            console.error(error);
-                        }
-                    }
-                );
-            })
-            .catch((err) => {
-                console.error('Error accessing camera:', err);
-            });
+          // Start scanning the video stream for barcodes
+          const scan = async () => {
+            try {
+              const barcodes = await barcodeDetector.detect(video);
+              if (barcodes.length > 0) {
+                output.textContent = `Barcode Detected: ${barcodes[0].rawValue}`;
+              } else {
+                output.textContent = 'Scanning...';
+              }
+            } catch (err) {
+              console.error('Error detecting barcode:', err);
+              output.textContent = 'Error detecting barcode.';
+            }
+            requestAnimationFrame(scan);
+          };
 
-    </script>
+          scan();
+        } catch (err) {
+          console.error('Error accessing camera:', err);
+          output.textContent = 'Error accessing camera.';
+        }
+      } else {
+        output.textContent = 'Barcode Detection API not supported in this browser.';
+        console.warn('Barcode Detection API not supported in this browser.');
+      }
+    }
+
+    // Start the scanner on page load
+    startBarcodeScanner();
+  </script>
 </body>
-
 </html>
