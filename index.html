@@ -77,8 +77,25 @@
     </script>
 
     <script>
+        const CACHE_NAME = 'v1';
+        const CACHE_FILES = [
+            '/', // Ensure leading slash
+            '/index.html',
+            '/styles.css',
+            '/script.js',
+            '/manifest.json',
+            '/images/logo.png'
+        ];
+
+        self.addEventListener('install', (event) => {
+            event.waitUntil(
+                caches.open(CACHE_NAME)
+                    .then((cache) => cache.addAll(CACHE_FILES))
+                    .catch((error) => console.error('Cache failed:', error))
+            );
+        });
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js', { scope: './' })
+            navigator.serviceWorker.register('./service-worker.js')
                 .then((registration) => {
                     console.log('Service Worker Registered with scope:', registration.scope);
                 })
