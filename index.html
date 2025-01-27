@@ -36,45 +36,53 @@
     <script src="https://unpkg.com/@zxing/library@latest"></script>
 
     <script>
-        const codeReader = new ZXing.BrowserMultiFormatReader();
-        const videoElement = document.getElementById('camera-feed');
-        const resultElement = document.getElementById('barcode-result');
-        const formats = [
-            ZXing.BarcodeFormat.QR_CODE,
-            ZXing.BarcodeFormat.CODE_128,
-            ZXing.BarcodeFormat.EAN_13,
-            ZXing.BarcodeFormat.UPC_A,
-        ];
+        document.addEventListener("DOMContentLoaded", () => {
+            const codeReader = new ZXing.BrowserMultiFormatReader();
+            const videoElement = document.getElementById('camera-feed');
+            const resultElement = document.getElementById('barcode-result');
 
-        // Access the user's camera
-        navigator.mediaDevices
-            .getUserMedia({ video: true })
-            .then((stream) => {
-                videoElement.srcObject = stream;
-                videoElement.play();
+            // List supported formats explicitly
+            const formats = [
+                ZXing.BarcodeFormat.QR_CODE,
+                ZXing.BarcodeFormat.CODE_128,
+                ZXing.BarcodeFormat.EAN_13,
+                ZXing.BarcodeFormat.UPC_A,
+            ];
 
-                // Decode barcodes from the camera feed
-                codeReader.decodeFromInputVideoDevice(undefined, 'camera-feed', {
-                    formats: formats
-                }).then((result) => {
-                    if (result) {
-                        resultElement.textContent = result.text;
-                    }
-                }).catch((err) => {
-                    console.error('Error decoding barcode:', err);
+            // Check camera permissions and access
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                .then((stream) => {
+                    videoElement.srcObject = stream;
+                    videoElement.play();
+
+                    // Start barcode scanning
+                    codeReader.decodeFromVideoDevice(null, 'camera-feed', (result, err) => {
+                        if (result) {
+                            resultElement.textContent = result.text;
+                            console.log('Scanned Barcode:', result.text);
+                            codeReader.reset(); // Stop scanning once detected
+                        }
+                        if (err && !(err instanceof ZXing.NotFoundException)) {
+                            console.error('Scanning error:', err);
+                        }
+                    });
+                })
+                .catch((err) => {
+                    console.error('Error accessing camera:', err);
+                    resultElement.textContent = "Camera access denied";
                 });
-            })
-            .catch((err) => {
-                console.error('Error accessing camera:', err);
-            });
-
+        });
     </script>
 
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js').then(() => {
-                console.log('Service Worker Registered');
-            });
+            navigator.serviceWorker.register('service-worker.js')
+                .then((registration) => {
+                    console.log('Service Worker Registered with scope:', registration.scope);
+                })
+                .catch((error) => {
+                    console.error('Service Worker registration failed:', error);
+                });
         }
     </script>
 </body>
