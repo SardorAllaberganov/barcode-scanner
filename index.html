@@ -39,6 +39,12 @@
         const codeReader = new ZXing.BrowserMultiFormatReader();
         const videoElement = document.getElementById('camera-feed');
         const resultElement = document.getElementById('barcode-result');
+        const formats = [
+            ZXing.BarcodeFormat.QR_CODE,
+            ZXing.BarcodeFormat.CODE_128,
+            ZXing.BarcodeFormat.EAN_13,
+            ZXing.BarcodeFormat.UPC_A,
+        ];
 
         // Access the user's camera
         navigator.mediaDevices
@@ -48,18 +54,15 @@
                 videoElement.play();
 
                 // Decode barcodes from the camera feed
-                codeReader.decodeFromVideoDevice(
-                    null,
-                    'camera-feed',
-                    (result, error) => {
-                        if (result) {
-                            resultElement.textContent = result.text;
-                        }
-                        if (error) {
-                            console.error(error);
-                        }
+                codeReader.decodeFromInputVideoDevice(undefined, 'camera-feed', {
+                    formats: formats
+                }).then((result) => {
+                    if (result) {
+                        resultElement.textContent = result.text;
                     }
-                );
+                }).catch((err) => {
+                    console.error('Error decoding barcode:', err);
+                });
             })
             .catch((err) => {
                 console.error('Error accessing camera:', err);
