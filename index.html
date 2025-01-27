@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barcode Scanner</title>
     <link rel="manifest" href="manifest.json">
-    <base href="https://sardorallaberganov.github.io/barcode-scanner/">
+    <base href="https://sardorallaberganov.github.io/barcode-scanner/index.html">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -76,34 +76,6 @@
         });
     </script>
 
-    <script>
-        const CACHE_NAME = 'v1';
-        const CACHE_FILES = [
-            '/', // Ensure leading slash
-            '/index.html',
-            '/styles.css',
-            '/script.js',
-            '/manifest.json',
-            '/images/logo.png'
-        ];
-
-        self.addEventListener('install', (event) => {
-            event.waitUntil(
-                caches.open(CACHE_NAME)
-                    .then((cache) => cache.addAll(CACHE_FILES))
-                    .catch((error) => console.error('Cache failed:', error))
-            );
-        });
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./service-worker.js')
-                .then((registration) => {
-                    console.log('Service Worker Registered with scope:', registration.scope);
-                })
-                .catch((error) => {
-                    console.error('Service Worker registration failed:', error);
-                });
-        }
-    </script>
 </body>
 
 </html>

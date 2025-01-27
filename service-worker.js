@@ -5,7 +5,7 @@ const CACHE_FILES = [
     './styles.css',
     './script.js',
     './manifest.json',
-    './images/logo.png',
+    './icon-512x512.png',
     'https://unpkg.com/@zxing/library@latest'
 ];
 
