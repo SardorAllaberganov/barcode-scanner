@@ -2,10 +2,7 @@ const CACHE_NAME = 'barcode-scanner-v1';
 const CACHE_FILES = [
     './',
     './index.html',
-    './styles.css',
-    './script.js',
     './manifest.json',
-    './icon-512x512.png',
     'https://unpkg.com/@zxing/library@latest'
 ];
 
