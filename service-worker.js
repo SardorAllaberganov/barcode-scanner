@@ -1,5 +1,7 @@
 const CACHE_NAME = 'barcode-scanner-v1';
 const CACHE_FILES = [
+    'barcode-scanner/index.html',
+    'barcode-scanner/manifest.json',
     '/',
     '/index.html',
     '/manifest.json',
