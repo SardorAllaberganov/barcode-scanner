@@ -1,8 +1,8 @@
 const CACHE_NAME = 'barcode-scanner-v1';
 const CACHE_FILES = [
-    './',
-    './index.html',
-    './manifest.json',
+    '/',
+    '/index.html',
+    '/manifest.json',
     'https://unpkg.com/@zxing/library@latest'
 ];
 
@@ -25,9 +25,9 @@ self.addEventListener('install', (event) => {
 // Fetch event - serve from cache or network
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            return cachedResponse || fetch(event.request);
-        }).catch(() => caches.match('./index.html'))
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
     );
 });
 

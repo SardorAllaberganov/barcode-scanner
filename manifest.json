@@ -2,7 +2,7 @@
     "name": "Barcode Scanner",
     "short_name": "Scanner",
     "description": "A simple barcode scanner app",
-    "start_url": "/barcode-scanner/",
+    "start_url": "/index.html",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#0078D7",
